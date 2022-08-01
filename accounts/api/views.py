@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from django.contrib.auth import logout as django_logout
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.decorators import action
@@ -29,3 +30,8 @@ class AccountViewSet(viewsets.ViewSet):
         if request.user.is_authenticated:
             data['user'] = UserSerializer(request.user).data
         return Response(data)
+
+    @action(methods=["POST"], detail=False)
+    def logout(self, request):
+        django_logout(request)
+        return Response({"success":True})
