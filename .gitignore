@@ -71,6 +71,7 @@ instance/
 
 #IDE
 .idea
+.pycharm_helpers
 
 # Scrapy stuff:
 .scrapy
