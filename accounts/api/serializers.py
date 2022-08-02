@@ -12,7 +12,12 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
-
+    def validate(self, data):
+        if not User.objects.filter(username=data['username'].lower()).exists():
+            raise exceptions.ValidationError({
+                "username": "User does not exist."
+            })
+        return data
 
 class SignupSerializer(serializers.ModelSerializer):
     username = serializers.CharField(max_length=20, min_length=6)
@@ -27,11 +32,11 @@ class SignupSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if User.objects.filter(username=data['username'].lower()).exists():
             raise exceptions.ValidationError({
-                "message": "This username address has been occupied."
+                "username": "This username address has been occupied."
             })
         if User.objects.filter(email=data['email'].lower()).exists():
             raise exceptions.ValidationError({
-                "message": "This email address has been occupied."
+                "email": "This email address has been occupied."
             })
         return data
 
