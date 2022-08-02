@@ -12,6 +12,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
+
     def validate(self, data):
         if not User.objects.filter(username=data['username'].lower()).exists():
             raise exceptions.ValidationError({
