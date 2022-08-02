@@ -26,7 +26,7 @@ SECRET_KEY = '-()d)h0)&&rc3%g(g2x*f3#aqd3m0*o2!k=h=&mcm)6@mzj0%i'
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', '192.168.33.10', 'localhost']
-
+INTERNAL_IPS = ['10.0.2.2'] #host machine address from virtual machine
 
 # Application definition
 
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    "debug_toolbar",
     'rest_framework',
 ]
 
@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'twitter.urls'
