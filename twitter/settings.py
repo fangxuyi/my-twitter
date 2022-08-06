@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', '192.168.33.10', 'localhost']
 INTERNAL_IPS = ['10.0.2.2'] #host machine address from virtual machine
 
-# Application definition
+# Application definition: all application created with startapp
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     "debug_toolbar",
     'rest_framework',
+    'tweets',
 ]
 
 REST_FRAMEWORK = {
