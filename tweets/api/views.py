@@ -1,14 +1,14 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from tweets.api.serializers import TweetSerializer#, TweetCreateSerializer
+from tweets.api.serializers import TweetSerializer, TweetSerializerForCreate
 from tweets.models import Tweet
 
 
 class TweetViewSet(viewsets.GenericViewSet,
                    viewsets.mixins.CreateModelMixin,
                    viewsets.mixins.ListModelMixin):
-    serializer_class = TweetSerializer
+    serializer_class = TweetSerializerForCreate
 
     def get_permissions(self):
         if self.action == 'list':
@@ -26,4 +26,16 @@ class TweetViewSet(viewsets.GenericViewSet,
         return Response({'tweets': serializer.data})
 
     def create(self, request):
-        pass
+        serializer = TweetSerializerForCreate(
+            data=request.data,
+            context={'request': request},
+        )
+        if not serializer.is_valid():
+            return Response({
+                "success": False,
+                "message": "Please check input",
+                "errors": serializer.errors,
+            }, status=400)
+
+        tweet = serializer.save()
+        return Response(TweetSerializer(tweet).data, status=201)
