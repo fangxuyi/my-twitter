@@ -10,7 +10,6 @@ FRIENDSHIP_UNFOLLOW_URL = '/api/friendships/{}/unfollow/'
 class FriendshipApiTests(TestCase):
 
     def setUp(self):
-        self.anonymous_client = APIClient()
 
         self.user1  = self.create_user("user1", "user1@twitter.com")
         self.user1_client = APIClient()
