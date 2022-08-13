@@ -108,10 +108,11 @@ class CommentApiTests(TestCase):
 
         self.create_comment(self.user1, self.tweet, '1')
         self.create_comment(self.user2, self.tweet, '2')
-        self.create_comment(self.user2, self.create_tweet(self.create_tweet(self.user2)), '3')
+        self.create_comment(self.user2, self.create_tweet(self.user2), '3')
         response = self.anonymous_client.get(COMMENT_URL, {
             'tweet_id': self.tweet.id,
         })
+        print(response.data['comments'])
         self.assertEqual(len(response.data['comments']), 2)
         self.assertEqual(response.data['comments'][0]['content'], '1')
         self.assertEqual(response.data['comments'][1]['content'], '2')

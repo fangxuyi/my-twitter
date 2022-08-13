@@ -26,7 +26,9 @@ class CommentViewSet(viewsets.GenericViewSet):
                 'success': False,
             }, status=status.HTTP_400_BAD_REQUEST)
         queryset = self.get_queryset()
-        comments = self.filter_queryset(queryset).prefretch_related('user').order_by('created_at')
+        print("Filter backends for debug")
+        print(self.filter_backends)
+        comments = self.filter_queryset(queryset).prefetch_related('user').order_by('created_at')
         serializer = CommentSerializer(comments, many=True)
         return Response({'comments': serializer.data}, status=status.HTTP_200_OK)
 
