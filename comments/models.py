@@ -1,5 +1,8 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.contrib.auth.models import User
+
+from likes.models import Like
 from tweets.models import Tweet
 
 
@@ -18,6 +21,14 @@ class Comment(models.Model):
     content = models.TextField(max_length=140)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def like_set(self):
+        #tweet.like_set() to get all likes for this tweet
+        return Like.objects.filter(
+            content_type = ContentType.objects.get_for_model(Comment),
+            object_id=self.id,
+        ).order_by('-created_at')
 
     class Meta:
         index_together = (
