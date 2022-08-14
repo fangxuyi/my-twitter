@@ -112,7 +112,6 @@ class CommentApiTests(TestCase):
         response = self.anonymous_client.get(COMMENT_URL, {
             'tweet_id': self.tweet.id,
         })
-        print(response.data['comments'])
         self.assertEqual(len(response.data['comments']), 2)
         self.assertEqual(response.data['comments'][0]['content'], '1')
         self.assertEqual(response.data['comments'][1]['content'], '2')
