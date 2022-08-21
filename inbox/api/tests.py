@@ -5,6 +5,7 @@ from testing.testcases import TestCase
 COMMENT_URL = '/api/comments/'
 LIKE_URL = '/api/likes/'
 NOTIFICATION_URL = '/api/notifications/'
+NOTIFICATION_DETAIL_URL = '/api/notifications/{}/'
 
 
 class NotificationTests(TestCase):
@@ -118,3 +119,40 @@ class NotificationsAPITests(TestCase):
         self.assertEqual(response.data['count'], 1)
         response = self.user1_client.get(NOTIFICATION_URL, {'unread': False})
         self.assertEqual(response.data['count'], 1)
+
+    def test_update(self):
+        self.user2_client.post(LIKE_URL, {
+            'content_type': 'tweet',
+            'object_id': self.user1_tweet.id,
+        })
+        comment = self.create_comment(self.user1, self.user1_tweet)
+        self.user2_client.post(LIKE_URL, {
+            'content_type': 'comment',
+            'object_id': comment.id,
+        })
+        notification = self.user1.notifications.first()
+
+        url = NOTIFICATION_DETAIL_URL.format(notification.id)
+        response = self.user1_client.post(url, {'unread': False})
+        self.assertEqual(response.status_code, 405)
+        response = self.anonymous_client.put(url, {'unread': False})
+        self.assertEqual(response.status_code, 403)
+        response = self.user2_client.put(url, {'unread': False})
+        self.assertEqual(response.status_code, 404)
+        response = self.user1_client.put(url, {'unread': False})
+        self.assertEqual(response.status_code, 200)
+        unread_url = '/api/notifications/unread-count/'
+        response = self.user1_client.get(unread_url)
+        self.assertEqual(response.data['unread_count'], 1)
+
+        response = self.user1_client.put(url, {'unread': True})
+        self.assertEqual(response.status_code, 200)
+        response = self.user1_client.get(unread_url)
+        self.assertEqual(response.data['unread_count'], 2)
+
+        response = self.user1_client.put(url, {'verb': 'newverb'})
+        self.assertEqual(response.status_code, 400)
+        response = self.user1_client.put(url, {'verb': 'newverb', 'unread': False})
+        self.assertEqual(response.status_code, 200)
+        notification.refresh_from_db()
+        self.assertNotEqual(notification.verb, 'newverb')
