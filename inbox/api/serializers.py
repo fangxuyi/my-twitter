@@ -1,8 +1,12 @@
-from rest_framework import serializers
 from notifications.models import Notification
+from rest_framework import serializers
 
 
 class NotificationSerializer(serializers.ModelSerializer):
+    actor_content_type = serializers.SerializerMethodField()
+
+    def get_actor_content_type(self, obj):
+        return obj.actor_content_type.name
 
     class Meta:
         model = Notification
@@ -18,3 +22,15 @@ class NotificationSerializer(serializers.ModelSerializer):
             'timestamp',
             'unread',
         )
+
+class NotificationSerializerForUpdate(serializers.ModelSerializer):
+    unread = serializers.BooleanField()
+
+    class Meta:
+        model = Notification
+        fields = ('unread', )
+
+    def update(self, instance, validated_data):
+        instance.unread = validated_data['unread']
+        instance.save()
+        return instance
