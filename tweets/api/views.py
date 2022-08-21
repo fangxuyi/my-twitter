@@ -22,7 +22,7 @@ class TweetViewSet(viewsets.GenericViewSet,
         tweet = self.get_object()
         return Response(TweetSerializerForDetail(tweet, context={'request':request}).data)
 
-    @required_params(request_attr='query_params', params=['user_id'])
+    @required_params(method='GET', params=['user_id'])
     def list(self, request):
 
         tweets = Tweet.objects.filter(

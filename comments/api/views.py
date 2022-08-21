@@ -1,10 +1,10 @@
 from comments.api.permissions import IsObjectOwner
 from comments.api.serializers import CommentSerializerForCreate, CommentSerializer, CommentSerializerForUpdate
 from comments.models import Comment
+from inbox.services import NotificationService
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-
 from utils.decorators import required_params
 
 
@@ -20,7 +20,7 @@ class CommentViewSet(viewsets.GenericViewSet):
             return [IsAuthenticated(), IsObjectOwner()]
         return [AllowAny()]
 
-    @required_params(request_attr='query_params', params=['tweet_id'])
+    @required_params(method='GET', params=['tweet_id'])
     def list(self, request, *args, **kwargs):
 
         queryset = self.get_queryset()
@@ -45,6 +45,7 @@ class CommentViewSet(viewsets.GenericViewSet):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         comment = serializer.save()
+        NotificationService.send_comment_notification(comment)
         return Response(CommentSerializer(comment, context={'request': request}).data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
