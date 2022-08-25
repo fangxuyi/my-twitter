@@ -46,12 +46,13 @@ INSTALLED_APPS = [
     'notifications',
     
     #project apps
-    'tweets',
-    'friendships',
-    'newsfeeds',
+    'accounts',
     'comments',
-    'likes',
+    'friendships',
     'inbox',
+    'likes',
+    'newsfeeds',
+    'tweets',
 ]
 
 REST_FRAMEWORK = {
