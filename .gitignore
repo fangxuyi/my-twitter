@@ -2,7 +2,7 @@
 *.box
 .vagrant
 Vagrantfile
-
+media/
 photo.jpg
 
 # Byte-compiled / optimized / DLL files
