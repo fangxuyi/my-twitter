@@ -1,4 +1,4 @@
-from comments.api.permissions import IsObjectOwner
+from utils.permissions import IsObjectOwner
 from comments.api.serializers import CommentSerializerForCreate, CommentSerializer, CommentSerializerForUpdate
 from comments.models import Comment
 from inbox.services import NotificationService
