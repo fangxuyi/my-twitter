@@ -156,8 +156,8 @@ TESTING = ((" ".join(sys.argv)).find('manage.py test') != -1)
 if TESTING:
     DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
-AWS_STORAGE_BUCKET_NAME = 'django-twitter'
-AWS_S3_REGION_NAME = 'us-west-1'
+AWS_STORAGE_BUCKET_NAME = 'django-twitter-yilisa'
+AWS_S3_REGION_NAME = 'us-east-1'
 #access key id and access secret key in local_settings file
 
 try:
