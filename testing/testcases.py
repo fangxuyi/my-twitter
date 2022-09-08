@@ -1,6 +1,7 @@
 from comments.models import Comment
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.core.cache import caches
 from django.test import TestCase as DjangoTestCase
 from likes.models import Like
 from newsfeeds.models import NewsFeed
@@ -16,6 +17,9 @@ class TestCase(DjangoTestCase):
             return self._anonymous_client
         self._anonymous_client = APIClient()
         return self._anonymous_client
+
+    def clear_cache(self):
+        caches['testing'].clear()
 
     def create_user_and_client(self, *args, **kwargs):
         user = self.create_user(*args, **kwargs)
