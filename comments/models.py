@@ -1,9 +1,9 @@
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.contrib.auth.models import User
-
 from likes.models import Like
 from tweets.models import Tweet
+from utils.memcached_helper import MemcachedHelper
 
 
 class Comment(models.Model):
@@ -22,6 +22,14 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        index_together = (
+            ('tweet','created_at'),
+        )
+
+    def __str__(self):
+        return f"{self.created_at} - {self.user} says {self.content} at tweet {self.tweet_id}"
+
     @property
     def like_set(self):
         #tweet.like_set() to get all likes for this tweet
@@ -30,10 +38,6 @@ class Comment(models.Model):
             object_id=self.id,
         ).order_by('-created_at')
 
-    class Meta:
-        index_together = (
-            ('tweet','created_at'),
-        )
-
-    def __str__(self):
-        return f"{self.created_at} - {self.user} says {self.content} at tweet {self.tweet_id}"
+    @property
+    def cached_user(self):
+        return MemcachedHelper.get_object_through_cache(User, self.user_id)
