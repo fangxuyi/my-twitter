@@ -32,7 +32,6 @@ class RedisHelper:
             return objects
 
         #cache miss
-        print("cache miss")
         cls._load_objects_to_cache(key, queryset)
 
         return list(queryset)
