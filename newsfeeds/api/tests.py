@@ -149,7 +149,7 @@ class NewsFeedApiTests(TestCase):
 
     def test_redis_list_limit(self):
         list_limit = settings.REDIS_LIST_LENGTH_LIMIT
-        page_size = 20
+        page_size = EndlessPagination.page_size
         users = [self.create_user('user{}'.format(i)) for i in range(5, 10)]
         newsfeeds = []
         for i in range(list_limit + page_size):
