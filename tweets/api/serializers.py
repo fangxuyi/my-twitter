@@ -9,6 +9,10 @@ from tweets.models import Tweet
 from tweets.services import TweetService
 
 
+#denormalization makes one number available at multiple places
+#increases efficiency as avoids N+1 query
+#however, brings inconsistency issues
+#source of truth is still the old N+1 query
 class TweetSerializer(serializers.ModelSerializer):
     user = UserSerializerWithProfile()
     comments_count = serializers.SerializerMethodField()
@@ -34,9 +38,12 @@ class TweetSerializer(serializers.ModelSerializer):
         return LikeService.has_liked(self.context['request'].user, obj)
 
     def get_comments_count(self, obj):
+        #return obj.comments_count
         return obj.comment_set.count()
 
+    # N+1 query
     def get_likes_count(self, obj):
+        #return obj.likes_count
         return obj.like_set.count()
 
     def get_photo_urls(self, obj):
