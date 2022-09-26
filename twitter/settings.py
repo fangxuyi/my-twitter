@@ -136,6 +136,16 @@ REDIS_DB = 0 if TESTING else 1
 REDIS_KEY_EXPIRE_TIME = 7 * 86400 #in second
 REDIS_LIST_LENGTH_LIMIT = 200 if not TESTING else 20
 
+
+#celery
+#use
+# celery -A twitter worker -l INFO
+#to run worker message queue
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/2' if not TESTING else 'redis://127.0.0.1:6379/0'
+CELERY_TIMEZONE = 'UTC'
+CELERY_TASK_ALWAYS_EAGER = TESTING
+
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
